@@ -42,6 +42,61 @@ class Deck():
         return single_card
 
 
-# test_deck = Deck()
-# test_deck.shuffle()
-# print(test_deck)
+'''
+# TEST ONE
+test_deck = Deck()
+test_deck.shuffle()
+print(test_deck)
+'''
+
+
+class Hand():
+    def __init__(self):
+        self.cards = []
+        self.value = 0
+        self.aces = 0
+
+    def add_card(self, card):
+        # card - from class: Deck, method: deal, returns: single_card(suit, rank)
+        self.cards.append(card)
+        self.value += values[card.rank]
+
+        # track aces
+        if card.rank == 'Ace':
+            self.aces += 1
+
+    def adjust_for_ace(self):
+        # ace default value is 11
+        # if total value is less than 21 and player holds an ace, change ace value to 1
+        # 'and self.aces' - aces is set to zero, which evaluates to false. self.aces evaluates to true if value is 1.
+        while self.value > 21 and self.aces:
+            self.value -= 10  # 11aceValue -10aceValue = 1 aceValue
+            self.aces -= 1  # reduces 2 aces count back to 1 ace
+
+
+'''
+# TEST TWO
+test_deck = Deck()
+test_deck.shuffle()
+# PLAYER
+test_player = Hand()
+# DEAL 1 CARD FROM THE DECK
+pulled_card = test_deck.deal()
+print(f'PULLED CARD: {pulled_card}')
+test_player.add_card(pulled_card)
+print(f'PLAYER ONE CARD VALUE: {test_player.value}')
+# alt
+# test_player.add_card(test_deck.deal())
+'''
+
+
+class Chips():
+    def __init__(self):
+        self.total = 100
+        self.bet = 0
+
+    def win_bet(self):
+        pass
+
+    def lose_bet(self):
+        pass
