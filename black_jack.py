@@ -131,13 +131,27 @@ def hit_or_stand(deck, hand):
         if x[0].lower() == 'h':
             hit(deck, hand)
         elif x[0].lower() == 's':
-            print('Player Stands. Dealer\'s turn.)
+            print('Player Stands. Dealer\'s turn.')
             playing = False
         else:
             print('Please enter h or s only.')
             continue
 
         break
+
+
+def show_some(player, dealer):
+    print("\nDealer's Hand:")
+    print(" <card hidden>")
+    print('', dealer.cards[1])
+    print("\nPlayer's Hand:", *player.cards, sep='\n ')
+
+
+def show_all(player, dealer):
+    print("\nDealer's Hand:", *dealer.cards, sep='\n ')
+    print("Dealer's Hand =", dealer.value)
+    print("\nPlayer's Hand:", *player.cards, sep='\n ')
+    print("Player's Hand =", player.value)
 
 
 def player_busts(player, dealer, chips):
@@ -150,21 +164,71 @@ def player_wins(player, dealer, chips):
     chips.win_bet()
 
 
-def dealer_busts(player, dealer, chips)
+def dealer_busts(player, dealer, chips):
+    print('Player Wins! Dealer busts.')
+    chips.win_bet()
 
 
-print('Player Wins! Dealer busts.')
-chips.win_bet()
+def dealer_wins(player, dealer, chips):
+    print('Dealer Wins!!!')
+    chips.lose_bet()
 
 
-def dealer_wins(player, dealer, chips)
+def push(player, dealer):
+    print('Dealer and Player tie. PUSH!')
 
 
-print('Dealer Wins!!!')
-chips.lose_bet()
+# game
 
+while True:
+    print('Welcome to Blackjack!')
+    # create and shuffle deck, deal two cards to player and dealer
+    deck = Deck()
+    deck.shuffle()
 
-def push(player, dealer)
+    player_hand = Hand()
+    player_hand.add_card(deck.deal())
+    player_hand.add_card(deck.deal())
 
+    dealer_hand = Hand()
+    dealer_hand.add_card(deck.deal())
+    dealer_hand.add_card(deck.deal())
 
-print('Dealer and Player tie. PUSH!')
+    # chips, and betting
+
+    player_chips = Chips()
+    take_bet(player_chips)
+    show_some(player_hand, dealer_hand)
+
+    while playing:
+
+        hit_or_stand(deck, player_hand)
+        show_some(player_hand, dealer_hand)
+
+        if player_hand.value > 21:
+            player_busts(player_hand, dealer_hand, player_chips)
+            break
+
+    if player_hand.value <= 21:
+        while dealer_hand.value < 17:
+            hit(deck, dealer_hand)
+
+        show_all(player_hand, dealer_hand)
+
+        if dealer_hand.value > 21:
+            dealer_busts(player_hand, dealer_hand, player_chips)
+        elif dealer_hand.value > player_hand.value:
+            dealer_wins(player_hand, dealer_hand, player_chips)
+        elif dealer_hand.value < player_hand.value:
+            player_wins(player_hand, dealer_hand, player_chips)
+        else:
+            push(player_hand, dealer_hand)
+
+    print(f'\n Player\'s total chips: {player_chips.total}')
+    new_game = input('Would you like to play again? y or n.')
+    if new_game[0].lower() == 'y':
+        playing = True
+        continue
+    else:
+        print('Thank you for playing!')
+        break
